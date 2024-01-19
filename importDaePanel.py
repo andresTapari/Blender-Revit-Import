@@ -131,18 +131,6 @@ class OBJET_REVIT_DAE_ImportTool(bpy.types.Panel):
         box.prop(scn.my_tool, "repair_alpha_channel", text="Reparar canal alfa")
         box.prop(scn.my_tool, "merge_repeated_materials", text="Fusionar materiales repetidos")
 
-        # Label
-        #col.label(text="Opciones:")
-                
-        # Agrega un checkBox para mantener unidades:
-        #col.prop(scn.my_tool, "import_units", text="Mantener unidades")
-        
-        # Agrega un checkbox de reparar malla
-        #col.prop(scn.my_tool, "repair_mesh", text="Reparar mallas")        
-
-        # Agrega un checkbox de reparar malla
-        #col.prop(scn.my_tool, "repair_alpha_channel", text="Reparar Alfa")        
-
         # Agrega un botón de importación
         col.operator("wm.revit_dae_import_operator", text="Importar")
                 
@@ -154,7 +142,7 @@ classes = (
     OBJET_REVIT_DAE_ImportTool
 )
 
-def register():
+"""def register():
     from bpy.utils import register_class
     for cls in classes:
         register_class(cls)
@@ -168,7 +156,7 @@ def unregister():
         unregister_class(cls)
     unregister_class(OBJECT_OT_RevitDAEImportOperator)
     del bpy.types.Scene.my_tool
-    
+    """
 
 
 def repair_alfa_channel_in_project():
