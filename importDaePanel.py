@@ -63,44 +63,16 @@ class OBJECT_OT_RevitDAEImportOperator(bpy.types.Operator):
 
 
         if repair_mesh:  
-            # Selecciona el objeto activo
-            obj = bpy.context.active_object
-
-            # Activa el modo de edición
-            bpy.ops.object.mode_set(mode='EDIT')
-
-            # Selecciona todos los vértices
-            bpy.ops.mesh.select_all(action='SELECT')
-
-            # Remueve los vértices duplicados
-            bpy.ops.mesh.remove_doubles()
-
-            # Desactiva el modo de edición
-            bpy.ops.object.mode_set(mode='OBJECT')
-
-        
+            repair_meshes_in_project()
+       
         if repair_alpha_channel:
-            # Obtener la lista de todos los materiales en la escena
-            materiales = bpy.data.materials
+           repair_alfa_channel_in_project()
 
-            # Iterar sobre cada material
-            for material in materiales:
-                # Verificar si el material tiene un nodo Principled BSDF 
-                # (Puede variar según el tipo de material que estés usando)
-                if material.use_nodes:
-                # Obtener el nodo Principled BSDF
-                    principled_node = material.node_tree.nodes.get("Principled BSDF")
-                    # Verificar si el nodo Principled BSDF existe en el material
-                    if principled_node:
-                        # Configurar el canal alfa del nodo Principled BSDF a 1
-                        principled_node.inputs["Alpha"].default_value = 1
-                        # Configurar Roughness:
-                        principled_node.inputs["Roughness"].default_value = 1
-                        # Configurar metallic:
-                        principled_node.inputs["Metallic"].default_value = 0
+        if merge_materials:
+            merge_duplicate_materials()
+
         return {'FINISHED'}
-
-   
+  
 class OBJET_REVIT_DAE_ImportTool(bpy.types.Panel):
     """Creates a Panel in the Object properties window"""
     bl_label = "Revir Import Tool"
@@ -119,10 +91,6 @@ class OBJET_REVIT_DAE_ImportTool(bpy.types.Panel):
         box.label(text="Ruta al archivo .dae:")
         box.prop(scn.my_tool, "path", text="")
 
-        #col.label(text="Ruta al archivo dae:")
-        # Agrega la ruta        
-        #col.prop(scn.my_tool, "path", text="")
-
         # Segundo grupo de layout_box
         box = layout.box()
         box.label(text="Opciones:")
@@ -132,7 +100,7 @@ class OBJET_REVIT_DAE_ImportTool(bpy.types.Panel):
         box.prop(scn.my_tool, "merge_repeated_materials", text="Fusionar materiales repetidos")
 
         # Agrega un botón de importación
-        col.operator("wm.revit_dae_import_operator", text="Importar")
+        layout.operator("wm.revit_dae_import_operator", text="Importar")
                 
         # print the path to the console
         print (scn.my_tool.path)
@@ -142,7 +110,7 @@ classes = (
     OBJET_REVIT_DAE_ImportTool
 )
 
-"""def register():
+def register():
     from bpy.utils import register_class
     for cls in classes:
         register_class(cls)
@@ -156,9 +124,10 @@ def unregister():
         unregister_class(cls)
     unregister_class(OBJECT_OT_RevitDAEImportOperator)
     del bpy.types.Scene.my_tool
-    """
 
 
+# Metodos:
+    
 def repair_alfa_channel_in_project():
     # Selecciona el objeto activo
     obj = bpy.context.active_object
